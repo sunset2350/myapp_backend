@@ -1,4 +1,4 @@
-package com.pgc.myapp.diary;
+package com.pgc.myapp.profile;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,15 +13,17 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Profile {
 
-
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long no;
+
+    @Column(nullable = false, unique = true)
+    private String userId;
     @Column(nullable = false)
-    private String passWord;
+    private String userPw;
     @Column(nullable = false)
-    private String name;
+    private String userName;
     @Column(nullable = false)
-    private String phoneNumber;
-    @Column(nullable = false)
-    private String birth;
+    private String userPhone;
+    private String userBirth;
 }
