@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
+    Optional<Profile> findByNo(long no);
 
 
 

@@ -1,15 +1,11 @@
 package com.pgc.myapp.diary;
 
-import com.pgc.myapp.profile.Profile;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -21,26 +17,18 @@ public class DiaryController {
     AtomicInteger no = new AtomicInteger(0);
     Map<String, Diary> list = new HashMap<>();
 
+
     @Autowired
     DiaryRepository repository;
 
     @GetMapping
-    public List<Diary> getProfileList() {
+    public List<Diary> getDiaryList() {
         List<Diary> list = repository.findAll(Sort.by("no").ascending());
         return list;
     }
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> addContent(@RequestBody Diary diary) {
-        if (diary.getUserId() == null || diary.getUserId().isEmpty()) {
-            Map<String, Object> list = new HashMap<>();
-            list.put("data", null);
-            list.put("message", "No Id");
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(list);
-        }
         if (diary.getUserPw() == null || diary.getUserPw().isEmpty()) {
             Map<String, Object> list = new HashMap<>();
             list.put("data", null);
@@ -69,7 +57,8 @@ public class DiaryController {
                     .body(list);
         }
 
-        diary.setCreateTime(new Date().toString());
+        diary.setCreateTime(new Date().getTime());
+
         repository.save(diary);
         Optional<Diary> saveDiary = repository.findById(diary.getNo());
 
@@ -84,7 +73,7 @@ public class DiaryController {
     }
 
     @DeleteMapping(value = "/{no}")
-    public ResponseEntity deleteContent(@PathParam("no") Long no){
+    public ResponseEntity deleteContent(@PathVariable("no") Long no){
         repository.deleteById(no);
         return ResponseEntity.ok().build();
     }
@@ -119,11 +108,18 @@ public class DiaryController {
     }
 
     @GetMapping(value = "/paging")
-    public Page<Diary> getDiaryPagine(@RequestParam int page, @RequestParam int size){
+    public Page<Diary> getDiaryPaging(@RequestParam int page, @RequestParam int size){
         Sort sort = Sort.by("no").descending();
 
         PageRequest pageRequest = PageRequest.of(page,size,sort);
         return repository.findAll(pageRequest);
+    }
+
+    @GetMapping(value = "/{title}")
+    public Page<Diary> getDiarySearch(@RequestParam String title){
+        Sort sort = Sort.by("no").descending();
+
+        return null;
     }
 
 

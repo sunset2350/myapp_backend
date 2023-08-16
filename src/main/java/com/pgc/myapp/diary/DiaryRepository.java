@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository <Diary, Long> {
     Optional<Diary> findByTitleContains(String title);
 
+    Optional<Diary> findByNo(long no);
+
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.SimpleDateFormat;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,6 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long no;
 
-    @Column(nullable = false)
     private String userId;
     @Column(nullable = false)
     private String userPw;
@@ -26,5 +27,6 @@ public class Diary {
     @Column(nullable = false)
     private String content;
     @Column(nullable = false)
-    private String createTime;
+    private long createTime;
 }
+
