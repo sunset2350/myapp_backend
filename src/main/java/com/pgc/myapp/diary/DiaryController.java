@@ -115,12 +115,23 @@ public class DiaryController {
         return repository.findAll(pageRequest);
     }
 
-    @GetMapping(value = "/{title}")
-    public Page<Diary> getDiarySearch(@RequestParam String title){
+    @GetMapping(value = "/paging/searchByTitle")
+    public Page<Diary> getDiarySearch(@RequestParam int page, @RequestParam int size, @RequestParam String title){
         Sort sort = Sort.by("no").descending();
-
-        return null;
+        PageRequest pageRequest = PageRequest.of(page, size,sort);
+        return repository.findByTitleContains(title,pageRequest);
     }
 
+    @GetMapping(value = "/paging/searchByContent")
+    public Page<Diary> getDiaryContent(@RequestParam int page, @RequestParam int size, @RequestParam String content){
+        Sort sort = Sort.by("no").descending();
+        PageRequest pageRequest = PageRequest.of(page,size,sort);
+        return repository.findByContentContainsOrderByNoDesc(content,pageRequest);
+    }
 
+    @GetMapping(value = "/paging/no")
+    public Optional<Diary> getDiaryDetails(@RequestParam long no, @RequestParam String userPw){
+        repository.findById(no);
+        return repository.findById(no);
+    }
 }
