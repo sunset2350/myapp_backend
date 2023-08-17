@@ -75,7 +75,7 @@ public class ProfileController {
         }
         Optional<Profile> checkId = repository.findByUserId(profile.getUserId());
         if(checkId.isPresent()) {
-            System.out.println("이미 존재합니다");
+            return (ResponseEntity<Map<String, Object>>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             repository.save(profile);
         }
