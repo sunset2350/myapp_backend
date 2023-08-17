@@ -73,8 +73,12 @@ public class ProfileController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(list);
         }
-
-        repository.save(profile);
+        Optional<Profile> checkId = repository.findByUserId(profile.getUserId());
+        if(checkId.isPresent()) {
+            System.out.println("이미 존재합니다");
+        } else {
+            repository.save(profile);
+        }
 
         if(repository != null) {
             Map<String , Object> list = new HashMap<>();
