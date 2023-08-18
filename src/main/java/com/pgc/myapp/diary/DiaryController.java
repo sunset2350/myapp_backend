@@ -131,7 +131,6 @@ public class DiaryController {
 
     @GetMapping(value = "/paging/no")
     public Optional<Diary> getDiaryDetails(@RequestParam long no, @RequestParam String userPw){
-        repository.findById(no);
-        return repository.findById(no);
+        return repository.findByNoAndUserPw(no,userPw);
     }
 }
