@@ -14,7 +14,9 @@ public interface DiaryRepository extends JpaRepository <Diary, Long> {
 
     Page<Diary> findByContentContainsOrderByNoDesc(String content, Pageable pageable);
 
-    Optional<Diary> findByNoAndUserPw(long no, String userPw);
+    Optional<Diary> findByNo(long no);
+
+
 
 
 

@@ -130,7 +130,7 @@ public class DiaryController {
     }
 
     @GetMapping(value = "/paging/no")
-    public Optional<Diary> getDiaryDetails(@RequestParam long no, @RequestParam String userPw){
-        return repository.findByNoAndUserPw(no,userPw);
+    public Optional<Diary> getDiaryDetails(@RequestParam long no){
+        return repository.findByNo(no);
     }
 }
