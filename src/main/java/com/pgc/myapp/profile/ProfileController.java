@@ -25,69 +25,69 @@ public class ProfileController {
         return list;
     }
 
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> addProfile(@RequestBody Profile profile) {
-
-        if (profile.getUserId() == null || profile.getUserId().isEmpty()) {
-            Map<String, Object> list = new HashMap<>();
-            list.put("data", null);
-            list.put("message", "No Id");
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(list);
-        }
-        if (profile.getUserPw() == null || profile.getUserPw().isEmpty()) {
-            Map<String, Object> list = new HashMap<>();
-            list.put("data", null);
-            list.put("message", "No Pw");
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(list);
-        }
-        if (profile.getUserName() == null || profile.getUserName().isEmpty()) {
-            Map<String, Object> list = new HashMap<>();
-            list.put("data", null);
-            list.put("message", "No Name");
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(list);
-        }
-        if (profile.getUserPhone() == null || profile.getUserPhone().isEmpty()) {
-            Map<String, Object> list = new HashMap<>();
-            list.put("data", null);
-            list.put("message", "No Phone");
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(list);
-        }
-        if (profile.getUserBirth() == null || profile.getUserBirth().isEmpty()) {
-            Map<String, Object> list = new HashMap<>();
-            list.put("data", null);
-            list.put("message", "No Birth");
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(list);
-        }
-        Optional<Profile> checkId = repository.findByUserId(profile.getUserId());
-        if(checkId.isPresent()) {
-            return (ResponseEntity<Map<String, Object>>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            repository.save(profile);
-        }
-
-        if(repository != null) {
-            Map<String , Object> list = new HashMap<>();
-            list.put("data", profile);
-            list.put("message", "create");
-            return ResponseEntity.status(HttpStatus.CREATED).body(list);
-        }
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping
+//    public ResponseEntity<Map<String, Object>> addProfile(@RequestBody Profile profile) {
+//
+//        if (profile.getUserId() == null || profile.getUserId().isEmpty()) {
+//            Map<String, Object> list = new HashMap<>();
+//            list.put("data", null);
+//            list.put("message", "No Id");
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(list);
+//        }
+//        if (profile.getUserPw() == null || profile.getUserPw().isEmpty()) {
+//            Map<String, Object> list = new HashMap<>();
+//            list.put("data", null);
+//            list.put("message", "No Pw");
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(list);
+//        }
+//        if (profile.getUserName() == null || profile.getUserName().isEmpty()) {
+//            Map<String, Object> list = new HashMap<>();
+//            list.put("data", null);
+//            list.put("message", "No Name");
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(list);
+//        }
+//        if (profile.getUserPhone() == null || profile.getUserPhone().isEmpty()) {
+//            Map<String, Object> list = new HashMap<>();
+//            list.put("data", null);
+//            list.put("message", "No Phone");
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(list);
+//        }
+//        if (profile.getUserBirth() == null || profile.getUserBirth().isEmpty()) {
+//            Map<String, Object> list = new HashMap<>();
+//            list.put("data", null);
+//            list.put("message", "No Birth");
+//
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(list);
+//        }
+//        Optional<Profile> checkId = repository.findByUserId(profile.getUserId());
+//        if(checkId.isPresent()) {
+//            return (ResponseEntity<Map<String, Object>>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+//        } else {
+//            repository.save(profile);
+//        }
+//
+//        if(repository != null) {
+//            Map<String , Object> list = new HashMap<>();
+//            list.put("data", profile);
+//            list.put("message", "create");
+//            return ResponseEntity.status(HttpStatus.CREATED).body(list);
+//        }
+//        return ResponseEntity.ok().build();
+//    }
 
     @DeleteMapping(value = "/{no}")
     public ResponseEntity DeleteProfile(@PathVariable("no") long no) {

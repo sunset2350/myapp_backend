@@ -1,6 +1,5 @@
-package com.pgc.myapp.profile;
+package com.pgc.myapp.auth.entity;
 
-import com.pgc.myapp.auth.entity.Login;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,23 +7,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-public class Profile {
+public class Login {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long no;
 
+    @Column(unique = true)
+    private String userId;
     @Column(nullable = false)
-    private String userName;
-    @Column(nullable = false)
-    private String userPhone;
-    private String userBirth;
+    private String userPw;
 
-
-    @OneToOne
-    private Login login;
+    private long profileNo;
 }

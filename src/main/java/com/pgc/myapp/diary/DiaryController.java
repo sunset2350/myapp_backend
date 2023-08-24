@@ -1,5 +1,8 @@
 package com.pgc.myapp.diary;
 
+import com.pgc.myapp.auth.Auth;
+import com.pgc.myapp.auth.AuthController;
+import com.pgc.myapp.auth.AuthProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +30,10 @@ public class DiaryController {
         return list;
     }
 
+    @Auth
     @PostMapping
-    public ResponseEntity<Map<String, Object>> addContent(@RequestBody Diary diary) {
+    public ResponseEntity<Map<String, Object>> addContent(@RequestBody Diary diary,
+                                                          @RequestAttribute AuthProfile authProfile) {
         if (diary.getUserPw() == null || diary.getUserPw().isEmpty()) {
             Map<String, Object> list = new HashMap<>();
             list.put("data", null);
@@ -60,10 +65,11 @@ public class DiaryController {
         diary.setCreateTime(new Date().getTime());
 
         repository.save(diary);
-        Optional<Diary> saveDiary = repository.findById(diary.getNo());
+        diary.setOwnerNo(authProfile.getNo());
+        Diary saveDiary = repository.save(diary);
 
 
-        if(saveDiary.isPresent()){
+        if(saveDiary != null){
             Map<String , Object> list = new HashMap<>();
             list.put("data", diary);
             list.put("message", "create");
@@ -72,15 +78,23 @@ public class DiaryController {
         return ResponseEntity.ok().build();
     }
 
+    @Auth
     @DeleteMapping(value = "/{no}")
-    public ResponseEntity deleteContent(@PathVariable("no") Long no){
-        repository.deleteById(no);
+    public ResponseEntity deleteContent(@PathVariable("no") Long no,
+                                        @RequestAttribute AuthProfile authProfile)
+
+    {
+        Optional<Diary> diary = repository.findById(new
+                DiaryId(authProfile.getNo(), authProfile.getUserId()));
+
+        repository.deleteById(new DiaryId(authProfile.getNo(), authProfile.getUserId()));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/{no}")
-    public ResponseEntity modifyContent(@PathVariable long no, @RequestBody Diary diary) {
-        Optional<Diary> searchDiary = repository.findById(no);
+    public ResponseEntity modifyContent(@PathVariable long no, @RequestBody Diary diary,
+                                        @RequestAttribute AuthProfile authProfile) {
+        Optional<Diary> searchDiary = repository.findById(new DiaryId(authProfile.getNo(), authProfile.getUserId()));
 
         if (!searchDiary.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -107,16 +121,20 @@ public class DiaryController {
         return ResponseEntity.badRequest().build();
     }
 
+    @Auth
     @GetMapping(value = "/paging")
-    public Page<Diary> getDiaryPaging(@RequestParam int page, @RequestParam int size){
+    public Page<Diary> getDiaryPaging(@RequestParam int page, @RequestParam int size,
+                                      @RequestAttribute AuthProfile authProfile){
         Sort sort = Sort.by("no").descending();
 
         PageRequest pageRequest = PageRequest.of(page,size,sort);
-        return repository.findAll(pageRequest);
+        return repository.findByOwnerNo(authProfile.getNo(),pageRequest);
     }
 
+    @Auth
     @GetMapping(value = "/paging/searchByTitle")
-    public Page<Diary> getDiarySearch(@RequestParam int page, @RequestParam int size, @RequestParam String title){
+    public Page<Diary> getDiarySearch(@RequestParam int page, @RequestParam int size, @RequestParam String title,
+                                      @RequestAttribute AuthProfile authProfile){
         Sort sort = Sort.by("no").descending();
         PageRequest pageRequest = PageRequest.of(page, size,sort);
         return repository.findByTitleContains(title,pageRequest);
@@ -126,11 +144,11 @@ public class DiaryController {
     public Page<Diary> getDiaryContent(@RequestParam int page, @RequestParam int size, @RequestParam String content){
         Sort sort = Sort.by("no").descending();
         PageRequest pageRequest = PageRequest.of(page,size,sort);
-        return repository.findByContentContainsOrderByNoDesc(content,pageRequest);
+        return repository.findByContentContains(content,pageRequest);
     }
 
     @GetMapping(value = "/paging/no")
     public Optional<Diary> getDiaryDetails(@RequestParam long no){
-        return repository.findByNo(no);
+        return repository.findByOwnerNo(no);
     }
 }

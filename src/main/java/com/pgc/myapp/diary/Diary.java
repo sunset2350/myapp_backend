@@ -13,13 +13,15 @@ import java.text.SimpleDateFormat;
 @AllArgsConstructor
 @Builder
 @Data
+@IdClass(DiaryId.class)
 public class Diary {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long no;
-
+    @Id
+    private long ownerNo;
+    @Id
     private String userId;
+
     @Column(nullable = false)
     private String userPw;
     @Column(nullable = false)
@@ -28,5 +30,7 @@ public class Diary {
     private String content;
     @Column(nullable = false)
     private long createTime;
+
+
 }
 
