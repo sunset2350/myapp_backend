@@ -13,6 +13,9 @@ public class AuthConfiguration {
     public HashUtil hashUtil() {
         return  new HashUtil();
     }
+
+
+
     @Bean
     public JwtUtil jwtUtil() {
         return new JwtUtil();

@@ -24,9 +24,11 @@ public class DiaryController {
     @Autowired
     DiaryRepository repository;
 
+
     @GetMapping
     public List<Diary> getDiaryList() {
-        List<Diary> list = repository.findAll(Sort.by("no").ascending());
+        List<Diary> list = repository.findAllByOrderByOwnerNo();
+
         return list;
     }
 
@@ -64,6 +66,7 @@ public class DiaryController {
 
         diary.setCreateTime(new Date().getTime());
 
+
         repository.save(diary);
         diary.setOwnerNo(authProfile.getNo());
         Diary saveDiary = repository.save(diary);
@@ -82,7 +85,6 @@ public class DiaryController {
     @DeleteMapping(value = "/{no}")
     public ResponseEntity deleteContent(@PathVariable("no") Long no,
                                         @RequestAttribute AuthProfile authProfile)
-
     {
         Optional<Diary> diary = repository.findById(new
                 DiaryId(authProfile.getNo(), authProfile.getUserId()));

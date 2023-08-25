@@ -21,6 +21,7 @@ public class Profile {
     @Column(nullable = false)
     private String userName;
     @Column(nullable = false)
+    private String userId;
     private String userPhone;
     private String userBirth;
 

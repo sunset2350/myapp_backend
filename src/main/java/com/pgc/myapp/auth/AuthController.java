@@ -39,9 +39,10 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping(value = "/signup")
-    public ResponseEntity signUp(@RequestBody SignupRequest req){
+    public ResponseEntity signUp(@RequestBody SignupRequest req) {
 
         long profileNo = service.createIdentity(req);
+        System.out.println(profileNo);
         return ResponseEntity.status(HttpStatus.CREATED).body(profileNo);
     }
 
@@ -49,41 +50,55 @@ public class AuthController {
     public ResponseEntity signIn(
             @RequestParam String userId,
             @RequestParam String userPw,
-            HttpServletResponse res)
-    {
+            HttpServletResponse res) {
         Optional<Login> login = loginRepository.findByUserId(userId);
-        if(!login.isPresent()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!login.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .location(ServletUriComponentsBuilder
+                            .fromHttpUrl("http://localhost:5500/login.html?err=Unauthorized")
+                            .build().toUri())
+                    .build();
         }
 
-        boolean isVerified = hashUtil.verifyHash(userPw,login.get().getUserPw());
-        if(!isVerified) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        boolean isVerified = hashUtil.verifyHash(userPw, login.get().getUserPw());
+        if (!isVerified) {
+            return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .location(ServletUriComponentsBuilder
+                            .fromHttpUrl("http://localhost:5500/login.html?err=Unauthorized")
+                            .build().toUri())
+                    .build();
         }
 
         Login l = login.get();
 
         Optional<Profile> profile = profileRepository.findByLogin_No(l.getNo());
-        if(!profile.isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+        if (!profile.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .location(ServletUriComponentsBuilder
+                            .fromHttpUrl("http://localhost:5500?err=Conflict")
+                            .build().toUri())
+                    .build();
         }
 
         String token = jwtUtil.createToken(
-                l.getNo(),l.getUserId(),
+                l.getNo(), l.getUserId(),
                 profile.get().getUserName());
+        System.out.println(token);
 
-        Cookie cookie =new Cookie("token",token);
+        Cookie cookie = new Cookie("token", token);
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtUtil.TOKEN_TIMEOUT / 1000L));
         cookie.setDomain("localhost");
 
         res.addCookie(cookie);
-
-
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .location(ServletUriComponentsBuilder
-                        .fromHttpUrl("http://localhost:5500")
+                        .fromHttpUrl("http://localhost:5500/myapp_frontend/diary/main.html")
                         .build().toUri())
                 .build();
     }

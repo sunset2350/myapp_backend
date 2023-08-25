@@ -33,15 +33,16 @@ public class AuthInterceptor implements HandlerInterceptor {
             }
 
             String token = request.getHeader("Authorization");
-
+            System.out.println(token);
             if(token == null || token.isEmpty()){
                 response.setStatus(401);
                 return false;
             }
 
-            AuthProfile profile = jwtUtil.validateToken(token.replace("Bearer", ""));
-
+            AuthProfile profile = jwtUtil.validateToken(token.replace("Bearer",""));
+            System.out.println(jwtUtil.validateToken(token.replace("Bearer","")));
             if(profile == null){
+                System.out.println("profile null");
                 response.setStatus(401);
                 return false;
             }

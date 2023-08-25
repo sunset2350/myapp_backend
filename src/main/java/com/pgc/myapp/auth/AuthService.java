@@ -17,6 +17,9 @@ public class AuthService {
     private ProfileRepository profileRepository;
 
     @Autowired
+    private HashUtil hashUtil;
+
+    @Autowired
     public AuthService(LoginRepository loginRepository,
     ProfileRepository profileRepository){
         this.loginRepository = loginRepository;
@@ -25,12 +28,10 @@ public class AuthService {
 
     @Transactional
     public long createIdentity(SignupRequest req){
-        HashUtil util = new HashUtil();
-
         Login toSaveLogin =
                 Login.builder()
                         .userId(req.getUserId())
-                        .userPw(util.createHash(req.getUserPw()))
+                        .userPw(hashUtil.createHash(req.getUserPw()))
                         .build();
 
         Login savedLogin = loginRepository.save(toSaveLogin);
@@ -44,7 +45,6 @@ public class AuthService {
                         .build();
 
         long profileNo = profileRepository.save(toSaveProfile).getNo();
-        System.out.println(profileNo);
         savedLogin.setProfileNo(profileNo);
         loginRepository.save(savedLogin);
 

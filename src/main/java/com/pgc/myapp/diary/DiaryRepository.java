@@ -14,6 +14,7 @@ public interface DiaryRepository extends JpaRepository <Diary, DiaryId> {
     Page<Diary> findByTitleContains(String title, Pageable pageable);
 
     Page<Diary> findByContentContains(String content, Pageable pageable);
+    List<Diary> findAllByOrderByOwnerNo();
 
 
     Optional<Diary> findByOwnerNo(long ownerNo);
