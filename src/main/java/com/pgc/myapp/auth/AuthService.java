@@ -3,9 +3,10 @@ package com.pgc.myapp.auth;
 
 import com.pgc.myapp.auth.entity.Login;
 import com.pgc.myapp.auth.entity.LoginRepository;
+import com.pgc.myapp.auth.request.SignupRequest;
 import com.pgc.myapp.auth.util.HashUtil;
-import com.pgc.myapp.profile.Profile;
-import com.pgc.myapp.profile.ProfileRepository;
+import com.pgc.myapp.auth.entity.Profile;
+import com.pgc.myapp.auth.entity.ProfileRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

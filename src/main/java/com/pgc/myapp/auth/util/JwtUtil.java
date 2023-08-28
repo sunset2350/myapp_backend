@@ -12,7 +12,7 @@ import com.pgc.myapp.auth.AuthProfile;
 public class JwtUtil {
 
     public final long TOKEN_TIMEOUT = 1000 * 60 * 60 * 24 * 7;
-    public String secret = "your-secret";
+    public String secret = "userPw";
 
 
     public String createToken(long no, String userId, String userName) {
@@ -22,7 +22,7 @@ public class JwtUtil {
         return JWT.create()
                 .withSubject(String.valueOf(no))
                 .withClaim("userId", userId)
-                .withClaim("userName", userName)
+                .withClaim("userName",userName)
                 .withIssuedAt(now)
                 .withExpiresAt(exp)
                 .sign(algorithm);
@@ -30,16 +30,15 @@ public class JwtUtil {
 
     public AuthProfile validateToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
-
         JWTVerifier verifier = JWT.require(algorithm).build();
 
         try {
             DecodedJWT decodedJWT = verifier.verify(token);
             Long no = Long.valueOf(decodedJWT.getSubject());
-            String userName = decodedJWT
-                    .getClaim("userName").asString();
             String userId = decodedJWT
                     .getClaim("userId").asString();
+            String userName = decodedJWT
+                    .getClaim("userName").asString();
 
             return AuthProfile.builder()
                     .no(no)

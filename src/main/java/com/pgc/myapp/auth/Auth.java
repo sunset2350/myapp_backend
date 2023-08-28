@@ -4,8 +4,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.METHOD})
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
 public @interface Auth {
-        public boolean require() default true;
+    public boolean require() default true;
 }

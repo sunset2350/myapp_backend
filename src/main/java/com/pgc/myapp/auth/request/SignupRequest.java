@@ -1,4 +1,4 @@
-package com.pgc.myapp.auth;
+package com.pgc.myapp.auth.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

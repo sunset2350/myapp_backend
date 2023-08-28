@@ -1,4 +1,4 @@
-package com.pgc.myapp.configuration;
+package com.pgc.myapp.auth.configuration;
 
 import com.pgc.myapp.auth.util.HashUtil;
 import com.pgc.myapp.auth.util.JwtUtil;

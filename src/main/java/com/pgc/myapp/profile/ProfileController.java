@@ -1,6 +1,8 @@
 package com.pgc.myapp.profile;
 
 
+import com.pgc.myapp.auth.entity.Profile;
+import com.pgc.myapp.auth.entity.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;

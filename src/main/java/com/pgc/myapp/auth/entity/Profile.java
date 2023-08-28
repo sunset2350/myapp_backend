@@ -1,4 +1,4 @@
-package com.pgc.myapp.profile;
+package com.pgc.myapp.auth.entity;
 
 import com.pgc.myapp.auth.entity.Login;
 import jakarta.persistence.*;
@@ -17,11 +17,9 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long no;
-
     @Column(nullable = false)
     private String userName;
     @Column(nullable = false)
-    private String userId;
     private String userPhone;
     private String userBirth;
 

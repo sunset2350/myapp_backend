@@ -1,7 +1,5 @@
 package com.pgc.myapp.diary;
 
-import com.pgc.myapp.auth.Auth;
-import com.pgc.myapp.auth.AuthController;
 import com.pgc.myapp.auth.AuthProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +30,6 @@ public class DiaryController {
         return list;
     }
 
-    @Auth
     @PostMapping
     public ResponseEntity<Map<String, Object>> addContent(@RequestBody Diary diary,
                                                           @RequestAttribute AuthProfile authProfile) {
@@ -81,7 +78,6 @@ public class DiaryController {
         return ResponseEntity.ok().build();
     }
 
-    @Auth
     @DeleteMapping(value = "/{no}")
     public ResponseEntity deleteContent(@PathVariable("no") Long no,
                                         @RequestAttribute AuthProfile authProfile)
@@ -123,7 +119,6 @@ public class DiaryController {
         return ResponseEntity.badRequest().build();
     }
 
-    @Auth
     @GetMapping(value = "/paging")
     public Page<Diary> getDiaryPaging(@RequestParam int page, @RequestParam int size,
                                       @RequestAttribute AuthProfile authProfile){
@@ -133,7 +128,6 @@ public class DiaryController {
         return repository.findByOwnerNo(authProfile.getNo(),pageRequest);
     }
 
-    @Auth
     @GetMapping(value = "/paging/searchByTitle")
     public Page<Diary> getDiarySearch(@RequestParam int page, @RequestParam int size, @RequestParam String title,
                                       @RequestAttribute AuthProfile authProfile){
