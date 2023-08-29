@@ -22,5 +22,5 @@ public class Login {
     @Column(nullable = false)
     private String userPw;
 
-    private long profileNo;
+    private long authProfileNo;
 }

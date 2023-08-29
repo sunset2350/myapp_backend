@@ -6,8 +6,8 @@ import com.pgc.myapp.auth.entity.LoginRepository;
 import com.pgc.myapp.auth.request.SignupRequest;
 import com.pgc.myapp.auth.util.HashUtil;
 import com.pgc.myapp.auth.util.JwtUtil;
-import com.pgc.myapp.auth.entity.Profile;
-import com.pgc.myapp.auth.entity.ProfileRepository;
+import com.pgc.myapp.profile.Profile;
+import com.pgc.myapp.profile.ProfileRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -98,9 +101,31 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .location(ServletUriComponentsBuilder
-                        .fromHttpUrl("http://127.0.0.1:5500")
+                        .fromHttpUrl("http://localhost:5500/myapp_frontend")
                         .build().toUri())
                 .build();
+    }
+
+    @GetMapping(value = "/find-Id")
+    public Optional<Profile> findById(@RequestParam("userName") String userName,
+                                      @RequestParam("userBirth") String userBirth) {
+
+        return profileRepository.findByUserNameAndUserBirth(userName, userBirth);
+    }
+
+    @GetMapping(value = "find-Pw")
+    public Optional<Profile> findByPw(@RequestParam("userName") String userName,
+                                      @RequestParam("userId") String userId,
+                                      @RequestParam("userPhone") String userPhone,
+                                      @RequestBody SignupRequest req
+                                      ) {
+        Profile profile = new Profile();
+
+
+
+
+        System.out.println(req);
+        return profileRepository.findByUserIdAndUserPhoneAndUserName(userId, userPhone, userName);
     }
 }
 

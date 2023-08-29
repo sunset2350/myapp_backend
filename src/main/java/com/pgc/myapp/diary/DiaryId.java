@@ -13,4 +13,5 @@ import java.io.Serializable;
 public class DiaryId implements Serializable {
     private long ownerNo;
     private String userId;
+
 }

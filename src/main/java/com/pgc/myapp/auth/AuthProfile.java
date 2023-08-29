@@ -14,6 +14,6 @@ public class AuthProfile {
     private long no;
     private String userName;
     private String userId;
-    private String userPhone;
     private String userBirth;
+    private String userPhone;
 }

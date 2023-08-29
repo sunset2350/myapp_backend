@@ -5,8 +5,8 @@ import com.pgc.myapp.auth.entity.Login;
 import com.pgc.myapp.auth.entity.LoginRepository;
 import com.pgc.myapp.auth.request.SignupRequest;
 import com.pgc.myapp.auth.util.HashUtil;
-import com.pgc.myapp.auth.entity.Profile;
-import com.pgc.myapp.auth.entity.ProfileRepository;
+import com.pgc.myapp.profile.Profile;
+import com.pgc.myapp.profile.ProfileRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,11 +42,13 @@ public class AuthService {
                         .userName(req.getUserName())
                         .userPhone(req.getUserPhone())
                         .userBirth(req.getUserBirth())
+                        .userId(req.getUserId())
+                        .userPw(hashUtil.createHash(req.getUserPw()))
                         .login(savedLogin)
                         .build();
 
         long profileNo = profileRepository.save(toSaveProfile).getNo();
-        savedLogin.setProfileNo(profileNo);
+        savedLogin.setAuthProfileNo(profileNo);
         loginRepository.save(savedLogin);
 
         return profileNo;

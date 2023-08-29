@@ -1,10 +1,9 @@
 package com.pgc.myapp.profile;
 
 
-import com.pgc.myapp.auth.entity.Profile;
-import com.pgc.myapp.auth.entity.ProfileRepository;
+import com.pgc.myapp.auth.Auth;
+import com.pgc.myapp.auth.AuthProfile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +15,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 @RequestMapping(value = "/profiles")
 public class ProfileController {
-    Map<String,Profile> list  = new ConcurrentHashMap<>();
+    Map<String, Profile> list = new ConcurrentHashMap<>();
     AtomicInteger no = new AtomicInteger(0);
     @Autowired
     ProfileRepository repository;
 
-    @GetMapping
-    public List<Profile> getProfileList() {
-        List<Profile> list = repository.findAll(Sort.by("no").ascending());
-        return list;
+
+    @GetMapping(value = "/find-Id/userName")
+    public Optional<Profile> findById(@RequestParam String userName) {
+
+        AuthProfile authProfile = new AuthProfile();
+        return repository.findByLogin_UserId(authProfile.getUserId());
     }
+
+
+
 
 //    @PostMapping
 //    public ResponseEntity<Map<String, Object>> addProfile(@RequestBody Profile profile) {
