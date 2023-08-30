@@ -6,7 +6,9 @@ import com.pgc.myapp.auth.entity.LoginRepository;
 import com.pgc.myapp.auth.request.SignupRequest;
 import com.pgc.myapp.auth.util.HashUtil;
 import com.pgc.myapp.auth.util.JwtUtil;
+import com.pgc.myapp.diary.Diary;
 import com.pgc.myapp.profile.Profile;
+import com.pgc.myapp.profile.ProfileModifyRequest;
 import com.pgc.myapp.profile.ProfileRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -113,19 +115,15 @@ public class AuthController {
         return profileRepository.findByUserNameAndUserBirth(userName, userBirth);
     }
 
-    @GetMapping(value = "find-Pw")
-    public Optional<Profile> findByPw(@RequestParam("userName") String userName,
-                                      @RequestParam("userId") String userId,
-                                      @RequestParam("userPhone") String userPhone,
-                                      @RequestBody SignupRequest req
-                                      ) {
-        Profile profile = new Profile();
-
-
-
-
-        System.out.println(req);
-        return profileRepository.findByUserIdAndUserPhoneAndUserName(userId, userPhone, userName);
+    @PutMapping(value = "find-Pw")
+    public ResponseEntity findByPw(@RequestParam("userName") String userName,
+                                   @RequestParam("userId") String userId,
+                                   @RequestParam("userPhone") String userPhone,
+                                   @RequestBody ProfileModifyRequest profileModifyRequest
+    ) {
+        Optional<Profile> result = profileRepository.findByUserIdAndUserPhoneAndUserName(userId, userPhone, userName);
+        service.changePassword(result.get().getNo(), profileModifyRequest.getUserPw());
+        return ResponseEntity.ok().body(result);
     }
 }
 

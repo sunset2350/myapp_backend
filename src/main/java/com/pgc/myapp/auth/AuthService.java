@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
 
@@ -52,5 +54,11 @@ public class AuthService {
         loginRepository.save(savedLogin);
 
         return profileNo;
+    }
+    @Transactional
+    public void changePassword(long no, String password){
+        Login login = loginRepository.findByNo(no);
+        login.setUserPw(hashUtil.createHash(password));
+        loginRepository.save(login);
     }
 }

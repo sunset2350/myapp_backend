@@ -26,7 +26,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             Auth auth = method.getAnnotation(Auth.class);
 
             if(auth == null) {
-                System.out.println("err");
                 return true;
             }
 
