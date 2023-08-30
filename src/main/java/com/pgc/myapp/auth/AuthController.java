@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/auth")
@@ -44,6 +45,29 @@ public class AuthController {
 
     @PostMapping(value = "/signup")
     public ResponseEntity signUp(@RequestBody SignupRequest req) {
+        String password = req.getUserPw();
+        String id = req.getUserId();
+
+        // 패스워드 정규표현식: 영어 + 숫자 + 특수문자 포함, 최소 8자 이상
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+
+        // ID 정규표현식: 영어 소문자, 대문자, 숫자만 허용
+        String idPattern = "^[a-zA-Z0-9]+$";
+
+        Pattern passwordPt = Pattern.compile(passwordPattern);
+        Pattern idPt = Pattern.compile(idPattern);
+
+        if (!idPt.matcher(id).matches()){
+            System.out.println("ID 형식 오류");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID 형식이 맞지않음");
+
+        }
+
+        if (!passwordPt.matcher(password).matches()){
+            System.out.println("패스워드 형식 오류");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("패스워드 형식이 맞지 않음");
+
+        }
 
         long profileNo = service.createIdentity(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(profileNo);
@@ -83,7 +107,7 @@ public class AuthController {
             return ResponseEntity
                     .status(HttpStatus.FOUND)
                     .location(ServletUriComponentsBuilder
-                            .fromHttpUrl("http://localhost:5500?err=Conflict")
+                            .fromHttpUrl("http://localhost:5500")
                             .build().toUri())
                     .build();
         }
@@ -121,6 +145,18 @@ public class AuthController {
                                    @RequestParam("userPhone") String userPhone,
                                    @RequestBody ProfileModifyRequest profileModifyRequest
     ) {
+
+        String password = profileModifyRequest.getUserPw();
+
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+
+        Pattern passwordPt = Pattern.compile(passwordPattern);
+
+        if (!passwordPt.matcher(password).matches()) {
+            System.out.println("패스워드 형식 오류");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("패스워드 형식이 맞지 않음");
+        }
+
         Optional<Profile> result = profileRepository.findByUserIdAndUserPhoneAndUserName(userId, userPhone, userName);
         service.changePassword(result.get().getNo(), profileModifyRequest.getUserPw());
         return ResponseEntity.ok().body(result);
