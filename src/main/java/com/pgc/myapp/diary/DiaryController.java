@@ -22,13 +22,13 @@ public class DiaryController {
     @Autowired
     DiaryRepository repository;
 
-
-    @GetMapping
-    public List<Diary> getDiaryList() {
-        List<Diary> list = repository.findAllByOrderByOwnerNo();
-
-        return list;
-    }
+//
+//    @GetMapping
+//    public List<Diary> getDiaryList() {
+//        List<Diary> list = repository.findAllByOrderByOwnerNo();
+//
+//        return list;
+//    }
 
     @Auth
     @PostMapping
@@ -120,7 +120,7 @@ public class DiaryController {
         Sort sort = Sort.by("ownerNo").descending();
 
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-        System.out.println(authProfile.getUserId());
+
         return repository.findByUserId(authProfile.getUserId(), pageRequest);
     }
 

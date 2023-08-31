@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ProfileModifyRequest {
+    @Column(nullable = false)
+    private String userName;
+    @Column(nullable = false)
+    private String userPhone;
+    private String userBirth;
 
     @Column(nullable = false)
     private String userPw;
