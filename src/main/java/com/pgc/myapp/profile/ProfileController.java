@@ -2,11 +2,8 @@ package com.pgc.myapp.profile;
 
 
 import com.pgc.myapp.auth.Auth;
-import com.pgc.myapp.auth.AuthController;
 import com.pgc.myapp.auth.AuthProfile;
 import com.pgc.myapp.auth.AuthService;
-import com.pgc.myapp.diary.Diary;
-import com.pgc.myapp.diary.DiaryId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +27,16 @@ public class ProfileController {
     private AuthService service;
 
 
-//    @Auth
-//    @GetMapping
-//    public List<Profile> getProfile(@RequestAttribute AuthProfile authProfile) {
-//        List<Profile> list = repository.findAll();
-//
-//        return repository.findAll();
-//    }
+    @GetMapping(value = "/{userId}")
+    public Optional<Profile> getProfile(@PathVariable("userId") String userId) {
+        Optional<Profile> list = repository.findByLogin_UserId(userId);
+
+
+        return list;
+    }
+
+
+
 
     @Auth
     @GetMapping(value = "/userprofile")
@@ -88,11 +88,9 @@ public class ProfileController {
                         toModifyProfile.getUserId(),
                         toModifyProfile.getUserPhone(),
                         toModifyProfile.getUserName());
-                System.out.println(result);
                 service.changePassword(result.get().getNo(), profileModifyRequest.getUserPw());
             }
 
-            System.out.println(toModifyProfile);
             repository.save(toModifyProfile);
 
 

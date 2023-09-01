@@ -2,6 +2,10 @@ package com.pgc.myapp.diary;
 
 import com.pgc.myapp.auth.Auth;
 import com.pgc.myapp.auth.AuthProfile;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping(value = "/diarys")
+@Tag(name="다이어리 관리 API")
 public class DiaryController {
     Map<String, Diary> list = new HashMap<>();
     AtomicLong num = new AtomicLong(0);
@@ -88,6 +93,7 @@ public class DiaryController {
         return ResponseEntity.ok().build();
     }
 
+
     @Auth
     @PutMapping(value = "/{ownerNo}")
     public ResponseEntity modifyContent(@PathVariable long ownerNo, @RequestBody DiaryModifyRequest diary,
@@ -113,6 +119,7 @@ public class DiaryController {
         return ResponseEntity.badRequest().build();
     }
 
+    @Operation(summary = "다이어리 조회", security = { @SecurityRequirement(name = "bearer-key") })
     @Auth
     @GetMapping(value = "/paging")
     public Page<Diary> getDiaryPaging(@RequestParam int page, @RequestParam int size,
