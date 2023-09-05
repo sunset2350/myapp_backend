@@ -37,6 +37,7 @@ public class DiaryController {
 
     @Auth
     @PostMapping
+    @Operation(summary = "다이어리 작성")
     public ResponseEntity<Map<String, Object>> addContent(@RequestBody Diary diary,
                                                           @RequestAttribute AuthProfile authProfile) {
 
@@ -84,6 +85,7 @@ public class DiaryController {
 
     @Auth
     @DeleteMapping(value = "/{ownerNo}")
+    @Operation(summary = "다이어리 삭제")
     public ResponseEntity deleteContent(@PathVariable("ownerNo") Long ownerNo,
                                         @RequestAttribute AuthProfile authProfile) {
         Optional<Diary> diary = repository.findById(new
@@ -96,6 +98,7 @@ public class DiaryController {
 
     @Auth
     @PutMapping(value = "/{ownerNo}")
+    @Operation(summary = "다이어리 수정")
     public ResponseEntity modifyContent(@PathVariable long ownerNo, @RequestBody DiaryModifyRequest diary,
                                         @RequestAttribute AuthProfile authProfile) {
         Optional<Diary> searchDiary = repository.findById(new DiaryId(ownerNo, authProfile.getUserId()));
@@ -119,9 +122,10 @@ public class DiaryController {
         return ResponseEntity.badRequest().build();
     }
 
-    @Operation(summary = "다이어리 조회", security = { @SecurityRequirement(name = "bearer-key") })
+//    @Operation(summary = "다이어리 조회", security = { @SecurityRequirement(name = "bearer-key") })
     @Auth
     @GetMapping(value = "/paging")
+    @Operation(summary = "다이어리 보기")
     public Page<Diary> getDiaryPaging(@RequestParam int page, @RequestParam int size,
                                       @RequestAttribute AuthProfile authProfile) {
         Sort sort = Sort.by("ownerNo").descending();
@@ -133,7 +137,8 @@ public class DiaryController {
 
     @Auth
     @GetMapping(value = "/paging/searchByTitle")
-    public Page<Diary> getDiarySearch(@RequestParam int page, @RequestParam int size, @RequestParam String title,
+    @Operation(summary = "다이어리 제목 검색")
+    public Page<Diary> getDiarySearchByTitle(@RequestParam int page, @RequestParam int size, @RequestParam String title,
                                       @RequestAttribute AuthProfile authProfile) {
         Sort sort = Sort.by("ownerNo").descending();
         PageRequest pageRequest = PageRequest.of(page, size, sort);
@@ -142,7 +147,8 @@ public class DiaryController {
 
     @Auth
     @GetMapping(value = "/paging/searchByContent")
-    public Page<Diary> getDiaryContent(@RequestParam int page, @RequestParam int size, @RequestParam String content,
+    @Operation(summary = "다이어리 본문 검색")
+    public Page<Diary> getDiarySearchByContent(@RequestParam int page, @RequestParam int size, @RequestParam String content,
                                        @RequestAttribute AuthProfile authProfile) {
         Sort sort = Sort.by("ownerNo").descending();
         PageRequest pageRequest = PageRequest.of(page, size, sort);
@@ -151,6 +157,7 @@ public class DiaryController {
 
     @Auth
     @GetMapping(value = "/paging/ownerNo")
+    @Operation(summary = "다이어리 상세 보기")
     public Optional<Diary> getDiaryDetails(@RequestParam long ownerNo, @RequestAttribute AuthProfile authProfile) {
         System.out.println(authProfile.getUserId());
         return repository.findByUserIdAndOwnerNo(authProfile.getUserId(), ownerNo);

@@ -4,6 +4,8 @@ package com.pgc.myapp.profile;
 import com.pgc.myapp.auth.Auth;
 import com.pgc.myapp.auth.AuthProfile;
 import com.pgc.myapp.auth.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/profiles")
+@Tag(name="프로필 관리 API")
 public class ProfileController {
     Map<String, Profile> list = new ConcurrentHashMap<>();
     AtomicInteger no = new AtomicInteger(0);
@@ -28,6 +31,7 @@ public class ProfileController {
 
 
     @GetMapping(value = "/{userId}")
+    @Operation(summary = "회원가입 시 중복 아이디 체크")
     public Optional<Profile> getProfile(@PathVariable("userId") String userId) {
         Optional<Profile> list = repository.findByLogin_UserId(userId);
 
@@ -40,6 +44,7 @@ public class ProfileController {
 
     @Auth
     @GetMapping(value = "/userprofile")
+    @Operation(summary = "프로필 보기")
     public Optional<Profile> findById(
             @RequestAttribute AuthProfile authProfile) {
 
@@ -47,14 +52,9 @@ public class ProfileController {
     }
 
 
-    @DeleteMapping(value = "/{no}")
-    public ResponseEntity DeleteProfile(@PathVariable("no") long no) {
-        repository.deleteById(no);
-        return ResponseEntity.ok().build();
-    }
-
     @Auth
     @PutMapping(value = "/userprofile")
+    @Operation(summary = "프로필 수정")
     public ResponseEntity modifyProfile(
             @RequestAttribute AuthProfile authProfile,
             @RequestBody ProfileModifyRequest profileModifyRequest

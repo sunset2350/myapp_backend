@@ -10,6 +10,8 @@ import com.pgc.myapp.diary.Diary;
 import com.pgc.myapp.profile.Profile;
 import com.pgc.myapp.profile.ProfileModifyRequest;
 import com.pgc.myapp.profile.ProfileRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/auth")
+@Tag(name="로그인 관리 API")
 public class AuthController {
 
     @Autowired
@@ -44,6 +47,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping(value = "/signup")
+    @Operation(summary = "회원 가입")
     public ResponseEntity signUp(@RequestBody SignupRequest req) {
         String password = req.getUserPw();
         String id = req.getUserId();
@@ -74,6 +78,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/sign")
+    @Operation(summary = "로그인")
     public ResponseEntity signIn(
             @RequestParam String userId,
             @RequestParam String userPw,
@@ -127,18 +132,18 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .location(ServletUriComponentsBuilder
-                        .fromHttpUrl("http://localhost:5500/myapp_frontend")
+                        .fromHttpUrl("http://localhost:5500/myapp_frontend/myapp_frontend")
                         .build().toUri())
                 .build();
     }
-
+    @Operation(summary = "아이디 찾기")
     @GetMapping(value = "/find-Id")
     public Optional<Profile> findById(@RequestParam("userName") String userName,
                                       @RequestParam("userBirth") String userBirth) {
 
         return profileRepository.findByUserNameAndUserBirth(userName, userBirth);
     }
-
+    @Operation(summary = "패스워드 찾기")
     @PutMapping(value = "find-Pw")
     public ResponseEntity findByPw(@RequestParam("userName") String userName,
                                    @RequestParam("userId") String userId,
